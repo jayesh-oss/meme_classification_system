@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Upload History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <div class="dashboard-bg">
+      <nav class="dashboard-nav">
+        <div class="logo">🧠 Meme Classifier</div>
+        <div class="nav-links">
+          <a href="{{ url_for('index') }}">Dashboard</a>
+          <a href="{{ url_for('history.history') }}" class="active">History</a>
+          <a href="{{ url_for('about') }}">About</a>
+        </div>
+      </nav>
+
+      <div class="history-container">
+        <div class="history-header">
+          <h1>Uploaded Images</h1>
+          <a class="history-back" href="{{ url_for('index') }}">Back to upload</a>
+        </div>
+
+        {% if files %}
+          <div class="history-grid">
+            {% for f in files %}
+              <div class="history-card">
+                <a href="{{ f }}" target="_blank"><img src="{{ f }}" class="history-thumb" alt="uploaded image"></a>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="history-empty">No uploaded images yet.</div>
+        {% endif %}
+      </div>
+    </div>
+  </body>
+</html>

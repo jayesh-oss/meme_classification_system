@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>About — Meme Classification System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <div class="dashboard-bg">
+      <nav class="dashboard-nav">
+        <div class="logo">🧠 Meme Classifier</div>
+        <div class="nav-links">
+          <a href="{{ url_for('index') }}">Dashboard</a>
+          <a href="{{ url_for('history.history') }}">History</a>
+          <a href="{{ url_for('about') }}" class="active">About</a>
+        </div>
+      </nav>
+
+      <div class="about-container">
+        <div class="about-header">
+          <div class="about-logo">MC</div>
+          <div class="about-hero">
+            <h1>Meme Classification System</h1>
+            <p class="about-lead">AI-driven platform that analyzes images, extracts text, and classifies memes into meaningful categories.</p>
+          </div>
+        </div>
+
+        <div class="about-grid">
+          <main class="about-card">
+            <h2 class="hero-title">About the project</h2>
+            <p class="hero-sub">The Meme Classification System combines computer vision and natural language processing to understand the visual and textual content of memes. Users upload an image, and the system performs OCR, image analysis, and semantic classification to tag the meme with one or more categories.</p>
+
+            <section aria-labelledby="features-title" style="margin-top:18px">
+              <h3 id="features-title" style="margin:0 0 8px">Key features</h3>
+              <div class="features">
+                <div class="feature">
+                  <h4>Image Classification</h4>
+                  <p>Uses deep learning models to detect visual patterns and assign categories like humorous, political, reaction, or informational.</p>
+                </div>
+                <div class="feature">
+                  <h4>Text Extraction (OCR)</h4>
+                  <p>Extracts embedded text from images using OCR to enable text-based analysis and search.</p>
+                </div>
+                <div class="feature">
+                  <h4>Multimodal Analysis</h4>
+                  <p>Combines visual cues and extracted text for a richer semantic understanding of the meme's message and tone.</p>
+                </div>
+                <div class="feature">
+                  <h4>Automated Categorization</h4>
+                  <p>Assigns one or more predefined categories to each uploaded meme to streamline organization and moderation.</p>
+                </div>
+              </div>
+            </section>
+
+            <section style="margin-top:18px">
+              <h3 style="margin:0 0 8px">Use cases</h3>
+              <ul style="margin:0;padding-left:18px;color:#cfeefc">
+                <li>Content moderation and policy enforcement</li>
+                <li>Social media trend and sentiment analysis</li>
+                <li>Dataset labelling for downstream ML projects</li>
+                <li>Research into meme virality and cultural trends</li>
+              </ul>
+            </section>
+
+            <section style="margin-top:18px">
+              <h3 style="margin:0 0 8px">How it works — high level</h3>
+              <ol style="margin:0 0 0 18px;color:#cfeefc">
+                <li>User uploads a meme image via the UI or API.</li>
+                <li>OCR engine extracts text from the image.</li>
+                <li>Image analysis model detects objects, faces, and visual style.</li>
+                <li>A multimodal classifier combines text and image features to predict categories.</li>
+                <li>Results (labels, confidence scores, extracted text) are returned and stored.</li>
+              </ol>
+            </section>
+
+            <a class="cta" href="#contact">Get in touch</a>
+          </main>
+
+          <aside class="about-sidebar">
+            <div class="card">
+              <h4 style="margin:0 0 8px">Project details</h4>
+              <p class="muted" style="margin:0 0 12px">A compact summary of the system's tech and goals.</p>
+
+              <div class="stat">
+                <strong>Primary goal</strong>
+                <span class="muted">Accurate multimodal meme classification</span>
+              </div>
+
+              <div class="stat">
+                <strong>Input</strong>
+                <span class="muted">Image (PNG, JPG)</span>
+              </div>
+
+              <div class="stat">
+                <strong>Output</strong>
+                <span class="muted">Categories, confidence, extracted text</span>
+              </div>
+
+              <h4 style="margin-top:12px;margin-bottom:6px">Technology stack</h4>
+              <ul class="tech-list">
+                <li>Python</li>
+                <li>Flask / FastAPI</li>
+                <li>PyTorch / TensorFlow</li>
+                <li>Tesseract / EasyOCR</li>
+              </ul>
+            </div>
+
+            <div style="height:12px"></div>
+
+            <div class="card">
+              <h4 style="margin:0 0 8px">Quick stats</h4>
+              <div class="stat"><strong>Categories</strong><span class="muted">Customizable</span></div>
+              <div class="stat"><strong>Model type</strong><span class="muted">Multimodal CNN + Text</span></div>
+              <div class="stat"><strong>Latency</strong><span class="muted">Depends on deployment</span></div>
+            </div>
+
+          </aside>
+        </div>
+
+        <footer id="contact" class="about-footer">
+          <p style="margin:0 0 6px">Questions, contributions, or feedback? Reach out at <a href="mailto:youremail@example.com">youremail@example.com</a></p>
+          <p style="margin:0">© <span id="year"></span> Meme Classification System</p>
+        </footer>
+      </div>
+    </div>
+
+    <script>
+      // small niceties
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>

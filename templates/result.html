@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Meme Classification Result</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="dashboard-bg">
+    <nav class="dashboard-nav">
+      <div class="logo">🧠 Meme Classifier</div>
+      <div class="nav-links">
+        <a href="/" class="">Dashboard</a>
+        <a href="#">History</a>
+        <a href="#">About</a>
+      </div>
+    </nav>
+    <div class="dashboard-container">
+      <div class="dashboard-header">
+        <h1>Classification Result</h1>
+        <p>Here is the model's prediction for your uploaded meme.</p>
+      </div>
+
+      <div class="dashboard-result">
+        <h3>Prediction: <span>{{ prediction }}</span></h3>
+        <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Uploaded Meme">
+        <p style="margin-top:12px;"><a href="/">⬅ Classify another meme</a></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+# --- Web Framework ---
+flask
+
+# --- Core ML Framework ---
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=2.0.0
+
+# --- Transformers & CLIP Support ---
+transformers>=4.40.0
+sentencepiece
+ftfy
+regex
+tqdm
+
+# --- Image & Data Processing ---
+numpy
+pandas
+Pillow
+opencv-python
+scikit-learn
+
+# --- OCR for Meme Text Extraction ---
+pytesseract
+easyocr
+
+# --- Utilities ---
+requests
+pyyaml
+joblib
+typing-extensions

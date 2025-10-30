@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Meme Classification Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="dashboard-bg">
+    <nav class="dashboard-nav">
+      <div class="logo">🧠 Meme Classifier</div>
+      <div class="nav-links">
+        <a href="#" class="active">Dashboard</a>
+        <a href="{{ url_for('history.history') }}">History</a>
+        <a href="{{ url_for('about') }}">About</a>
+      </div>
+    </nav>
+    <div class="dashboard-container">
+      <div class="dashboard-header">
+        <h1>Meme Classification Dashboard</h1>
+        <p>Upload a meme and let the AI tell you what kind it is!</p>
+      </div>
+      <div class="dashboard-cards">
+        <div class="dashboard-card">
+          <h2>Total Memes Classified</h2>
+          <div class="card-value">{{ total_memes or '—' }}</div>
+        </div>
+        <div class="dashboard-card">
+          <h2>Most Predicted Class</h2>
+          <div class="card-value">{{ top_class or '—' }}</div>
+        </div>
+        <div class="dashboard-card">
+          <h2>Last Prediction</h2>
+          <div class="card-value">{% if prediction %}{{ prediction }}{% else %}—{% endif %}</div>
+        </div>
+      </div>
+      <div class="dashboard-form-section">
+        <!-- Keep original form action and input name to preserve server logic -->
+        <form action="/classify" method="post" enctype="multipart/form-data" class="dashboard-form">
+          <input type="file" name="file" accept="image/*" required>
+          <button type="submit">Classify Meme</button>
+        </form>
+        {% if prediction %}
+        <div class="dashboard-result">
+          <h3>Prediction: <span>{{ prediction }}</span></h3>
+          <img src="{{ url_for('static', filename=image) }}" alt="Uploaded Meme">
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</body>
+</html>
