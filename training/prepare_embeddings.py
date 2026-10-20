@@ -34,6 +34,7 @@ def main():
     device = torch.device(
         args.device or ("cuda" if torch.cuda.is_available() else "cpu")
     )
+    print(f"Device: {device}")
 
     from sentence_transformers import SentenceTransformer
     from transformers import CLIPModel, CLIPProcessor

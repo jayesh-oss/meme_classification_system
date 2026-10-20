@@ -34,6 +34,7 @@ class FusionClassifier:
         self.device = torch.device(
             device or ("cuda" if torch.cuda.is_available() else "cpu")
         )
+        print(f"Fusion head device: {self.device}")
         checkpoint = torch.load(head_path, map_location="cpu")
 
         self.labels = checkpoint["labels"]

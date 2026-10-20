@@ -27,11 +27,13 @@ def _get_zero_shot():
     if _zero_shot is None:
         from transformers import pipeline
 
+        device = _device()
         _zero_shot = pipeline(
             "zero-shot-image-classification",
             model=os.getenv("CLIP_MODEL", DEFAULT_CLIP_MODEL),
-            device=_device(),
+            device=device,
         )
+        print(f"CLIP zero-shot device: {'cuda' if device == 0 else 'cpu'}")
     return _zero_shot
 
 

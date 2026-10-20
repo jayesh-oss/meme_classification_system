@@ -37,6 +37,7 @@ def main():
     device = torch.device(
         args.device or ("cuda" if torch.cuda.is_available() else "cpu")
     )
+    print(f"Device: {device}")
 
     data = np.load(args.embeddings)
     image = torch.tensor(data["image"], dtype=torch.float32)
