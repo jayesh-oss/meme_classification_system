@@ -2,7 +2,7 @@ import os
 
 from utils.ocr import extract_text
 
-CATEGORIES = ["Wholesome", "Dark", "Political", "Promotional", "Offensive"]
+CATEGORIES = ["Wholesome", "Dark Humor", "Political", "Offensive"]
 DEFAULT_CLIP_MODEL = "openai/clip-vit-base-patch32"
 DEFAULT_FUSION_HEAD = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
@@ -51,6 +51,19 @@ def _get_fusion():
     return _fusion
 
 
+def classify_zero_shot(image_path):
+    results = _get_zero_shot()(
+        image_path,
+        candidate_labels=CATEGORIES,
+        hypothesis_template=HYPOTHESIS_TEMPLATE,
+    )
+    scores = [
+        {"label": item["label"], "score": round(float(item["score"]) * 100, 1)}
+        for item in results
+    ]
+    return {"prediction": scores[0]["label"], "scores": scores}
+
+
 def classify_meme(image_path):
     text = extract_text(image_path)
     has_text = bool(text)
@@ -72,18 +85,10 @@ def classify_meme(image_path):
         except Exception as error:
             print(f"Fusion head unavailable, falling back to zero-shot: {error}")
 
-    results = _get_zero_shot()(
-        image_path,
-        candidate_labels=CATEGORIES,
-        hypothesis_template=HYPOTHESIS_TEMPLATE,
-    )
-    scores = [
-        {"label": item["label"], "score": round(float(item["score"]) * 100, 1)}
-        for item in results
-    ]
+    zero_shot = classify_zero_shot(image_path)
     return {
-        "prediction": scores[0]["label"],
-        "scores": scores,
+        "prediction": zero_shot["prediction"],
+        "scores": zero_shot["scores"],
         "extracted_text": text if has_text else "No text detected.",
         "has_text": has_text,
     }

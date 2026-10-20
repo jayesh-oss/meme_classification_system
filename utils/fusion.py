@@ -10,7 +10,7 @@ def extract_image_features(clip, inputs):
 
 
 class FusionHead(nn.Module):
-    def __init__(self, image_dim=512, text_dim=384, hidden_dim=256, num_classes=5):
+    def __init__(self, image_dim=512, text_dim=384, hidden_dim=256, num_classes=4):
         super().__init__()
         self.classifier = nn.Sequential(
             nn.Linear(image_dim + text_dim, hidden_dim),

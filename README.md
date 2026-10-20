@@ -24,7 +24,7 @@ This project aims to provide an **automated and scalable solution** for meme cla
 
 1. User uploads a meme image through the web interface  
 2. Image is preprocessed for model compatibility  
-3. CLIP compares the image against five category prompts (or a trained fusion head runs)  
+3. CLIP compares the image against four category prompts (or a trained fusion head runs)  
 4. Predicted meme category and confidence scores are displayed to the user  
 
 ---
@@ -78,7 +78,7 @@ meme_classification_system/
 
 ## 🧠 Model Pipeline
 
-The default classifier is CLIP `openai/clip-vit-base-patch32` used as zero-shot image classification against five prompts. It needs no training data and works on CPU or GPU.
+The default classifier is CLIP `openai/clip-vit-base-patch32` used as zero-shot image classification against four prompts. It needs no training data and works on CPU or GPU.
 
 For higher accuracy, the project also supports a fusion head that combines:
 - CLIP image embeddings (512-d)
@@ -94,9 +94,8 @@ Organize labeled images into class folders:
 ```
 data/memes/
 ├── Wholesome/
-├── Dark/
+├── Dark Humor/
 ├── Political/
-├── Promotional/
 └── Offensive/
 ```
 
@@ -108,6 +107,15 @@ python training/train_head.py --embeddings data/embeddings.npz
 ```
 
 The training script reports macro-F1 and a confusion matrix, then saves `models/meme_head.pt`.
+
+See [training/LABELING.md](training/LABELING.md) for class definitions, the precedence rule, and dataset sources.
+
+Evaluate both models on the same held-out folder:
+
+```bash
+python training/evaluate.py --data-dir data/test --mode zero-shot
+python training/evaluate.py --data-dir data/test --mode fusion
+```
 
 ### GPU note (Windows)
 
