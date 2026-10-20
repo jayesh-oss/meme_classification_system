@@ -119,6 +119,8 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 
 Verify with `python -c "import torch; print(torch.cuda.is_available())"`.
 
+The CUDA wheels are about **2.6 GB** to download and roughly **5–6 GB** installed. Allow ~8 GB of free disk space during installation.
+
 ---
 
 ## ⚙️ Installation & Execution
