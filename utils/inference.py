@@ -1,22 +1,87 @@
-import pytesseract
-from PIL import Image
-from transformers import pipeline
+import os
 
-# load zero-shot classification model once
-classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
+from utils.ocr import extract_text
 
-# candidate categories
-categories = ["wholesome", "dark", "political", "promotional", "offensive"]
+CATEGORIES = ["Wholesome", "Dark", "Political", "Promotional", "Offensive"]
+DEFAULT_CLIP_MODEL = "openai/clip-vit-base-patch32"
+DEFAULT_FUSION_HEAD = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    "models",
+    "meme_head.pt",
+)
+HYPOTHESIS_TEMPLATE = "This is a {} meme."
+
+_zero_shot = None
+_fusion = None
+
+
+def _device():
+    import torch
+
+    return 0 if torch.cuda.is_available() else -1
+
+
+def _get_zero_shot():
+    global _zero_shot
+
+    if _zero_shot is None:
+        from transformers import pipeline
+
+        _zero_shot = pipeline(
+            "zero-shot-image-classification",
+            model=os.getenv("CLIP_MODEL", DEFAULT_CLIP_MODEL),
+            device=_device(),
+        )
+    return _zero_shot
+
+
+def _fusion_head_path():
+    return os.getenv("FUSION_HEAD", DEFAULT_FUSION_HEAD)
+
+
+def _get_fusion():
+    global _fusion
+
+    if _fusion is None:
+        from utils.fusion import FusionClassifier
+
+        _fusion = FusionClassifier(_fusion_head_path())
+    return _fusion
+
 
 def classify_meme(image_path):
-    # Extract text from meme
-    text = pytesseract.image_to_string(Image.open(image_path))
+    text = extract_text(image_path)
+    has_text = bool(text)
 
-    if not text.strip():
-        text = "This meme has no readable text"
+    if os.path.exists(_fusion_head_path()):
+        try:
+            probabilities = _get_fusion().predict(image_path, text)
+            scores = [
+                {"label": label, "score": round(probability * 100, 1)}
+                for label, probability in probabilities
+            ]
+            scores.sort(key=lambda item: item["score"], reverse=True)
+            return {
+                "prediction": scores[0]["label"],
+                "scores": scores,
+                "extracted_text": text if has_text else "No text detected.",
+                "has_text": has_text,
+            }
+        except Exception as error:
+            print(f"Fusion head unavailable, falling back to zero-shot: {error}")
 
-    # Classify with zero-shot
-    result = classifier(text, candidate_labels=categories)
-    predicted = result["labels"][0]  # highest confidence
-
-    return predicted
+    results = _get_zero_shot()(
+        image_path,
+        candidate_labels=CATEGORIES,
+        hypothesis_template=HYPOTHESIS_TEMPLATE,
+    )
+    scores = [
+        {"label": item["label"], "score": round(float(item["score"]) * 100, 1)}
+        for item in results
+    ]
+    return {
+        "prediction": scores[0]["label"],
+        "scores": scores,
+        "extracted_text": text if has_text else "No text detected.",
+        "has_text": has_text,
+    }

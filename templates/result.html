@@ -2,32 +2,82 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Meme Classification Result</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 </head>
-<body>
-  <div class="dashboard-bg">
-    <nav class="dashboard-nav">
-      <div class="logo">🧠 Meme Classifier</div>
-      <div class="nav-links">
-        <a href="/" class="">Dashboard</a>
-        <a href="#">History</a>
-        <a href="#">About</a>
+<body class="animate-fade-in">
+  <nav class="dashboard-nav">
+    <div class="logo">🧠 Meme Classifier</div>
+    <div class="nav-links">
+      <a href="{{ url_for('index') }}">Dashboard</a>
+      <a href="{{ url_for('history.history') }}">History</a>
+      <a href="{{ url_for('about') }}">About</a>
+    </div>
+  </nav>
+
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <h1>Classification Result</h1>
+      <p>Here is the model's prediction for your uploaded meme.</p>
+    </div>
+
+    <div class="dashboard-result animate-fade-in">
+      <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem; color: var(--primary);">
+        Primary Prediction: <span style="color: var(--text-main);">{{ prediction }}</span>
+      </h3>
+      
+      <div class="result-image-wrapper">
+        <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Uploaded Meme" class="result-image">
       </div>
-    </nav>
-    <div class="dashboard-container">
-      <div class="dashboard-header">
-        <h1>Classification Result</h1>
-        <p>Here is the model's prediction for your uploaded meme.</p>
+      
+      <!-- Extracted Text -->
+      <div class="extracted-text-box">
+        <h4>Extracted Text (OCR)</h4>
+        <p>{{ extracted_text }}</p>
       </div>
 
-      <div class="dashboard-result">
-        <h3>Prediction: <span>{{ prediction }}</span></h3>
-        <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Uploaded Meme">
-        <p style="margin-top:12px;"><a href="/">⬅ Classify another meme</a></p>
+      <!-- Confidence Bars -->
+      {% if scores %}
+      <div class="confidence-section">
+        <h3 class="confidence-title">Confidence Scores</h3>
+        {% for score in scores %}
+        <div class="confidence-bar-container">
+          <div class="confidence-label">
+            <span>{{ score.label }}</span>
+            <span>{{ score.score }}%</span>
+          </div>
+          <div class="bar-bg">
+            <div class="bar-fill" style="width: {{ score.score }}%;"></div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div style="margin-top: 2.5rem;">
+        <a href="{{ url_for('index') }}" class="btn-primary" style="text-decoration: none;">
+          ⬅ Classify Another Meme
+        </a>
       </div>
     </div>
   </div>
+
+  <script>
+    // Animate progress bars on load
+    document.addEventListener("DOMContentLoaded", function() {
+      setTimeout(() => {
+        const bars = document.querySelectorAll('.bar-fill');
+        bars.forEach(bar => {
+          const width = bar.style.width;
+          bar.style.width = '0%';
+          setTimeout(() => {
+            bar.style.width = width;
+          }, 100);
+        });
+      }, 100);
+    });
+  </script>
 </body>
 </html>

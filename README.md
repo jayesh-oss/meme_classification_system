@@ -24,8 +24,8 @@ This project aims to provide an **automated and scalable solution** for meme cla
 
 1. User uploads a meme image through the web interface  
 2. Image is preprocessed for model compatibility  
-3. Trained machine learning model performs classification  
-4. Predicted meme category is displayed to the user  
+3. CLIP compares the image against five category prompts (or a trained fusion head runs)  
+4. Predicted meme category and confidence scores are displayed to the user  
 
 ---
 
@@ -46,11 +46,12 @@ This project aims to provide an **automated and scalable solution** for meme cla
 - Flask  
 
 ### Machine Learning & Image Processing
-- Image Classification  
-- OpenCV  
-- NumPy  
-- Pillow  
-- Scikit-learn / TensorFlow *(as applicable)*  
+- PyTorch  
+- Hugging Face Transformers  
+- CLIP (ViT-B/32) zero-shot classification  
+- sentence-transformers (OCR text embeddings)  
+- PyTesseract OCR  
+- NumPy / Pillow / scikit-learn  
 
 ### Frontend
 - HTML5  
@@ -70,8 +71,53 @@ meme_classification_system/
 ├── static/                # Static assets (CSS, images)
 ├── templates/             # HTML templates
 ├── requirements.txt       # Project dependencies
-└── sample.jpg             # Sample meme image
+└── sample.jpg          # Sample meme image
 ```
+
+---
+
+## 🧠 Model Pipeline
+
+The default classifier is CLIP `openai/clip-vit-base-patch32` used as zero-shot image classification against five prompts. It needs no training data and works on CPU or GPU.
+
+For higher accuracy, the project also supports a fusion head that combines:
+- CLIP image embeddings (512-d)
+- MiniLM OCR text embeddings (384-d)
+- A small MLP trained on labeled memes
+
+If `models/meme_head.pt` exists, inference uses it automatically and falls back to CLIP zero-shot otherwise.
+
+### Train the fusion head
+
+Organize labeled images into class folders:
+
+```
+data/memes/
+├── Wholesome/
+├── Dark/
+├── Political/
+├── Promotional/
+└── Offensive/
+```
+
+Then precompute embeddings and train the head:
+
+```bash
+python training/prepare_embeddings.py --data-dir data/memes
+python training/train_head.py --embeddings data/embeddings.npz
+```
+
+The training script reports macro-F1 and a confusion matrix, then saves `models/meme_head.pt`.
+
+### GPU note (Windows)
+
+The default `pip install torch` wheel is CPU-only. For an NVIDIA GPU:
+
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+```
+
+Verify with `python -c "import torch; print(torch.cuda.is_available())"`.
 
 ---
 
@@ -92,6 +138,9 @@ pip install -r requirements.txt
 ```bash
 python app.py
 ```
+
+> OCR requires a Tesseract installation. Set `TESSERACT_CMD` if it is not on your PATH.
+> Set `CLIP_MODEL` to override the default model, or `FUSION_HEAD` to point at a custom fusion checkpoint.
 
 Open in browser:
 ```

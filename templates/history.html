@@ -1,40 +1,52 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Upload History</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  </head>
-  <body>
-    <div class="dashboard-bg">
-      <nav class="dashboard-nav">
-        <div class="logo">🧠 Meme Classifier</div>
-        <div class="nav-links">
-          <a href="{{ url_for('index') }}">Dashboard</a>
-          <a href="{{ url_for('history.history') }}" class="active">History</a>
-          <a href="{{ url_for('about') }}">About</a>
-        </div>
-      </nav>
-
-      <div class="history-container">
-        <div class="history-header">
-          <h1>Uploaded Images</h1>
-          <a class="history-back" href="{{ url_for('index') }}">Back to upload</a>
-        </div>
-
-        {% if files %}
-          <div class="history-grid">
-            {% for f in files %}
-              <div class="history-card">
-                <a href="{{ f }}" target="_blank"><img src="{{ f }}" class="history-thumb" alt="uploaded image"></a>
-              </div>
-            {% endfor %}
-          </div>
-        {% else %}
-          <div class="history-empty">No uploaded images yet.</div>
-        {% endif %}
-      </div>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Upload History</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body class="animate-fade-in">
+  <nav class="dashboard-nav">
+    <div class="logo">🧠 Meme Classifier</div>
+    <div class="nav-links">
+      <a href="{{ url_for('index') }}">Dashboard</a>
+      <a href="{{ url_for('history.history') }}" class="active">History</a>
+      <a href="{{ url_for('about') }}">About</a>
     </div>
-  </body>
+  </nav>
+
+  <div class="history-container">
+    <div class="history-header">
+      <h1>Classification History</h1>
+      <a class="btn-primary" href="{{ url_for('index') }}" style="width: auto; margin-top: 0; padding: 0.8rem 1.5rem; text-decoration: none; font-size: 0.9rem;">
+        + Classify New Meme
+      </a>
+    </div>
+
+    {% if history_data %}
+      <div class="history-grid">
+        {% for item in history_data %}
+          <div class="history-card">
+            <a href="{{ item.url }}" target="_blank">
+              <img src="{{ item.url }}" class="history-thumb" alt="uploaded image">
+            </a>
+            <div class="history-meta">
+              <div class="history-label">{{ item.prediction }}</div>
+              <div class="history-date">{{ item.date }}</div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="dashboard-card" style="text-align: center; padding: 4rem;">
+        <span style="font-size: 3rem; margin-bottom: 1rem; display: block;">📭</span>
+        <h2 style="color: var(--text-main); margin-bottom: 0.5rem; font-size: 1.5rem;">No History Yet</h2>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">Upload your first meme to start building your classification history.</p>
+        <a href="{{ url_for('index') }}" class="btn-primary" style="text-decoration: none;">Go to Dashboard</a>
+      </div>
+    {% endif %}
+  </div>
+</body>
 </html>

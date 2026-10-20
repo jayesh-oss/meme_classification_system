@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.py[cod]
+.vscode/
+.commandcode/
+.env
+
+static/uploads/metadata.json
+data/
+models/*.pt
+models/*.pth
