@@ -139,7 +139,16 @@ git clone https://github.com/jayesh-oss/meme_classification_system.git
 cd meme_classification_system
 ```
 
-### 2️⃣ Install Dependencies
+### ⚡ Windows one-click setup (recommended)
+```bat
+setup.bat
+```
+
+The script creates `venv`, installs dependencies, offers the CUDA PyTorch build,
+creates the data folders, and checks Tesseract. If a CUDA build is already
+installed, it skips the 2.6 GB download.
+
+### 2️⃣ Manual install (alternative)
 ```bash
 pip install -r requirements.txt
 ```
@@ -149,7 +158,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-> OCR requires a Tesseract installation. Set `TESSERACT_CMD` if it is not on your PATH.
+> OCR requires Tesseract. The app auto-detects `C:\Program Files\Tesseract-OCR\tesseract.exe`; set `TESSERACT_CMD` to override.
 > Set `CLIP_MODEL` to override the default model, or `FUSION_HEAD` to point at a custom fusion checkpoint.
 
 Open in browser:
